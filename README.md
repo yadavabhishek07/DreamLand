@@ -1,5 +1,5 @@
 Dream Land Web Application 🏡
-A full-stack property listing and booking platform (Airbnb Clone) built with Node.js, Express, and MongoDB.
+A full-stack property listing and booking platform built with Node.js, Express, and MongoDB.
 
 🌟 Overview
 Dream Land is a robust web application that allows users to explore, create, and review property listings. It comes packed with essential features like secure authentication, image uploads, session management, and a fully responsive UI.
