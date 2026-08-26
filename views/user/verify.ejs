@@ -1,0 +1,127 @@
+<%- layout('layouts/boilerplate') %>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <i class="fa-solid fa-compass"></i>
+            <span>Dream Land</span>
+        </div>
+        <h1 class="auth-title">Verify your email</h1>
+        <p class="auth-subtitle">We sent a 6-digit verification code to your registered email address.</p>
+
+        <form id="otp-form" action="/verify-login" method="POST" class="needs-validation" novalidate>
+            <!-- Hidden input to store the compiled OTP -->
+            <input type="hidden" name="otp" id="hidden-otp">
+
+            <!-- 6 separate OTP fields -->
+            <div class="otp-inputs-grid">
+                <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required autocomplete="off">
+                <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required autocomplete="off" disabled>
+                <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required autocomplete="off" disabled>
+                <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required autocomplete="off" disabled>
+                <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required autocomplete="off" disabled>
+                <input type="text" class="otp-field" maxlength="1" pattern="[0-9]" inputmode="numeric" required autocomplete="off" disabled>
+            </div>
+
+            <button class="auth-btn-primary mb-3" type="submit" id="verify-btn" disabled>Verify Code</button>
+        </form>
+
+        <div class="auth-footer text-center mt-2">
+            <span style="font-size: 0.85rem; color: #717171;">Didn't receive a code?</span>
+            <a href="/login" style="font-size: 0.85rem;">Go back and login again</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const otpFields = document.querySelectorAll(".otp-field");
+        const hiddenOtpInput = document.getElementById("hidden-otp");
+        const otpForm = document.getElementById("otp-form");
+        const verifyBtn = document.getElementById("verify-btn");
+
+        // Focus the first input field initially
+        otpFields[0].focus();
+
+        otpFields.forEach((field, index) => {
+            // Focus next input when a number is typed
+            field.addEventListener("input", (e) => {
+                const val = e.target.value;
+                
+                // Allow only numbers
+                if (!/^[0-9]$/.test(val)) {
+                    e.target.value = "";
+                    return;
+                }
+
+                // Enable and focus next field
+                if (index < otpFields.length - 1) {
+                    otpFields[index + 1].removeAttribute("disabled");
+                    otpFields[index + 1].focus();
+                }
+
+                checkFieldsAndCompile();
+            });
+
+            // Handle backspace or left/right arrow navigation
+            field.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace") {
+                    if (field.value === "") {
+                        // Move focus to previous field and clear it
+                        if (index > 0) {
+                            otpFields[index].setAttribute("disabled", "true");
+                            otpFields[index - 1].focus();
+                            otpFields[index - 1].value = "";
+                        }
+                    } else {
+                        field.value = "";
+                    }
+                    checkFieldsAndCompile();
+                }
+            });
+
+            // Handle paste of 6 digits
+            field.addEventListener("paste", (e) => {
+                const pasteData = e.clipboardData.getData("text").trim();
+                
+                // Validate if it is a 6-digit number
+                if (/^[0-9]{6}$/.test(pasteData)) {
+                    otpFields.forEach((f, idx) => {
+                        f.removeAttribute("disabled");
+                        f.value = pasteData[idx];
+                    });
+                    otpFields[otpFields.length - 1].focus();
+                    checkFieldsAndCompile();
+                    
+                    // Auto submit on successful paste
+                    setTimeout(() => {
+                        otpForm.submit();
+                    }, 200);
+                }
+                e.preventDefault();
+            });
+        });
+
+        function checkFieldsAndCompile() {
+            let combinedOtp = "";
+            let allFilled = true;
+
+            otpFields.forEach((field) => {
+                combinedOtp += field.value;
+                if (field.value === "") {
+                    allFilled = false;
+                }
+            });
+
+            hiddenOtpInput.value = combinedOtp;
+
+            if (allFilled && combinedOtp.length === 6) {
+                verifyBtn.removeAttribute("disabled");
+                // Auto submit when all fields are filled
+                otpForm.submit();
+            } else {
+                verifyBtn.setAttribute("disabled", "true");
+            }
+        }
+    });
+</script>

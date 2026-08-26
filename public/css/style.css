@@ -1,0 +1,342 @@
+body{
+    font-family: 'Plus Jakarta Sans' , sans-serif !important;
+   display: flex;
+   flex-direction: column;
+   height:100vh ;
+}
+.container{
+   flex: 1;
+}
+.navbar{
+    height:  5rem;
+}
+.navbar .navbar-nav {
+    align-items: center;
+}
+.search-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.search-inp {
+    width: 220px;
+    min-width: 180px;
+    border-radius: 50px;
+    border: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.search-inp:focus {
+    outline: none;
+    border-color: #fe424d;
+    box-shadow: 0 0 0 0.15rem rgba(254, 66, 77, 0.15);
+}
+.search-btn {
+    background-color: #fe424d;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 0.5rem 1.25rem;
+    transition: background-color 0.2s ease;
+}
+.search-btn:hover {
+    background-color: #dd3b43;
+}
+.fa-compass{
+   color: #fe424d;  
+   font-size: 2rem;
+}
+.nav-link{
+    color: #222222 !important;
+}
+.f-info-links a {
+text-decoration: none;
+color:#222222  ;
+}
+.f-info-links a:hover {
+text-decoration: underline;
+
+}
+.f-info-links ,
+ .f-info-socials,
+ .f-info-brand
+ {
+    width:100% ;
+    display: flex;
+    align-items:center ;
+    justify-content: center;
+
+}
+
+.f-info-socials{
+ font-size: 1.3rem;
+margin-right: 5rem;
+}
+.f-info{
+    text-align: center;
+    height:8rem;
+    background-color:#ebebeb ;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+
+}
+ /* cards */
+ .listing-card{
+    border:none !important;
+   margin-bottom: 2rem; 
+
+ }
+ .card-img-top{
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+
+ }
+ .card-body{
+    padding: 0 !important;
+ }
+ .card-text p {
+    font-weight:400 !important ;
+ }
+ .listing-link{
+    text-decoration: none;  
+ }
+ /* card effect */
+
+ .card-img-overlay{
+     opacity: 0;
+ }
+ .card-img-overlay:hover{
+    opacity: 0.2;
+    background-color:white ;
+
+/* new page */
+ }
+ .add-btn{
+   background-color: #fe424d !important ;
+   border: none !important;
+ }
+ /* show image */
+
+ .show-img{
+   height: 30vh;
+ }
+ .btns{
+   display: flex;
+ }
+ .show-card{
+   padding-left: 0;
+   padding-right: 0;
+ }
+
+/* Modern Auth Page Styles (Google/SaaS-like) */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 13rem);
+    padding: 2.5rem 1rem;
+}
+.auth-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 440px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.auth-card:hover {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+.auth-brand {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fe424d;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.auth-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: #222222;
+    margin-bottom: 0.3rem;
+}
+.auth-subtitle {
+    font-size: 0.9rem;
+    color: #717171;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.form-floating {
+    position: relative;
+}
+.form-floating .password-toggle-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #717171;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0;
+}
+.form-floating .password-toggle-btn:hover {
+    color: #222222;
+}
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: #fe424d !important;
+}
+.form-control:focus {
+    border-color: #fe424d !important;
+    box-shadow: 0 0 0 0.2rem rgba(254, 66, 77, 0.15) !important;
+}
+.auth-btn-primary {
+    background-color: #fe424d;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.8rem;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.2s ease;
+}
+.auth-btn-primary:hover {
+    background-color: #dd3b43;
+    color: white;
+}
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #717171;
+    margin: 1.5rem 0;
+    font-size: 0.85rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e0e0e0;
+}
+.auth-divider:not(:empty)::before {
+    margin-right: .75rem;
+}
+.auth-divider:not(:empty)::after {
+    margin-left: .75rem;
+}
+.auth-btn-google {
+    background-color: #ffffff;
+    border: 1px solid #dadce0;
+    color: #3c4043;
+    border-radius: 0.5rem;
+    padding: 0.8rem;
+    font-weight: 600;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+.auth-btn-google:hover {
+    background-color: #f8f9fa;
+    border-color: #d2d4d7;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+}
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #717171;
+}
+.auth-footer a {
+    color: #fe424d;
+    text-decoration: none;
+    font-weight: 600;
+}
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* 6-Digit OTP Box Grid */
+.otp-inputs-grid {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 2rem 0;
+}
+.otp-field {
+    width: 3.2rem;
+    height: 3.8rem;
+    font-size: 1.8rem;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    color: #212529;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.otp-field:focus {
+    border-color: #fe424d;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(254, 66, 77, 0.25);
+}
+/* Hide spin buttons for number fields in OTP inputs */
+.otp-field::-webkit-outer-spin-button,
+.otp-field::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.otp-field[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* Show Page Listing Card Box Styling */
+.show-card {
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 1.25rem !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+    background-color: #ffffff;
+    overflow: hidden;
+    padding: 0 !important;
+    margin-bottom: 2rem;
+}
+.show-card .card-body {
+    padding: 1.5rem !important;
+}
+.show-card .card-img-top {
+    border-radius: 1.25rem 1.25rem 0 0 !important;
+}
+/* Keep Leaflet tiles, popups, and controls inside the listing map box. */
+.map-box {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: clamp(260px, 50vw, 400px);
+    overflow: hidden;
+    isolation: isolate;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background: #f5f5f5;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
