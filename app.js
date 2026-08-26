@@ -43,12 +43,8 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 // 5. Database Connection String Config
-let dbUrl = process.env.ATLASDB_URL;
+let dbUrl = process.env.ATLASDB_URL || "mongodb+srv://abhisheky0718_db_user:8HwcrAloqa7o9pWj@cluster0.dnarzwz.mongodb.net/dream_land?appName=Cluster0";
 const secret = process.env.SECRET || "thisshouldbeabettersecret!";
-
-if (!dbUrl) {
-    console.log("No ATLASDB_URL environment variable found.");
-}
 
 // 6. View Engine and Middleware Setup
 app.set("view engine", "ejs");
