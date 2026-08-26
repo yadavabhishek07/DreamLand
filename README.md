@@ -63,48 +63,7 @@ dreamland/
 
 ## 🚀 Getting Started
 
-Follow these instructions to run the project locally.
 
-### Prerequisites
-
-Ensure you have the following installed:
-* [Node.js](https://nodejs.org/) (v20.0.0 or higher)
-* [MongoDB](https://www.mongodb.com/) (Local Community Server or Atlas Cluster connection string)
-* [Cloudinary Account](https://cloudinary.com/) (For image upload API keys)
-* [Google Cloud Console Project](https://console.cloud.google.com/) (For OAuth Client ID/Secret)
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/your-username/majorproject.git
-cd majorproject
-```
-
-### 2. Install dependencies
-```bash
-npm install
-```
-
-### 3. Environment Variables Setup
-Create a `.env` file in the root directory and configure the following variables:
-
-```env
-# Application Port
-PORT=5000
-
-# MongoDB Connection String (Local or Atlas)
-ATLASDB_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/dreamland
-
-# Express Session Secret
-SECRET=your_super_secret_session_key
-
-# Cloudinary Credentials (For image hosting)
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_KEY=your_cloudinary_api_key
-CLOUDINARY_SECRET=your_cloudinary_api_secret
-
-# Google OAuth 2.0 Credentials (For Social Login)
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
 ### 4. Seed the Database (Optional)
@@ -120,44 +79,5 @@ npm start
 ```
 The server will start on port `5000` by default. Open [http://localhost:5000](http://localhost:5000) in your browser.
 
----
 
-## 🌐 Deployment & Hosting
 
-### 1. Deploying to Render
-This application is configured for deployment on [Render](https://render.com/). Follow these steps to host your own instance:
-
-1. Create a new **Web Service** on Render and connect your GitHub repository.
-2. Select **Node** as the runtime.
-3. Configure the following build and start commands:
-   * **Build Command:** `npm install`
-   * **Start Command:** `npm start`
-4. Add all environment variables listed in the `.env` section under **Environment** in the Render dashboard.
-
-### 2. Custom Domain Configuration
-To point a custom domain (e.g., `yourdomain.com`) to your Render deployment:
-1. In the Render Dashboard, go to your service's **Settings** -> **Custom Domains** and add your domain.
-2. In your DNS provider (e.g., Porkbun, Namecheap), add a **CNAME** record:
-   * **Name:** `www`
-   * **Target:** `dreamland-31ik.onrender.com`
-3. Add an **ALIAS**, **ANAME**, or **A** record for the root domain (`@`) pointing to your Render app URL or Render's IP address (check the Render dashboard for the exact IP).
-
-### 3. Keeping the App Active 24/7 (Free Tier)
-Render's free tier web services spin down after 15 minutes of inactivity. To prevent this cold start and keep your application awake 24/7:
-1. Set up a free account at [UptimeRobot](https://uptimerobot.com/) or [Cron-Job.org](https://cron-job.org/).
-2. Create a new monitor/cron job to ping your Render live URL (`https://dreamland-31ik.onrender.com`) every **10 minutes**.
-3. This keeps the server active constantly without incurring charges. *(Note: Running 24/7 consumes ~744 hours of your 750 free Render hours/month, which is safe if this is your only running free service).*
-
----
-
-## 🛡️ Security & Best Practices
-
-- **Sanitization & Escaping**: Input validation uses robust schemas compiled through **Joi** to block malicious payloads before controller processing.
-- **Route Authorization**: Strict middleware boundaries ensure users can only modify/delete property listings or reviews they created.
-- **Session Store**: Client sessions are stored in MongoDB via `connect-mongo` instead of in-memory, preventing memory leaks and preserving session state across deployments.
-
----
-
-## 📜 License
-
-This project is licensed under the **ISC License**. See the `LICENSE` file for more details.
