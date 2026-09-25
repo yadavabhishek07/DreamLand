@@ -1,13 +1,10 @@
 # DreamLand 🏡
 
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-blue.svg)](https://nodejs.org/)
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
-[![Framework](https://img.shields.io/badge/Framework-Express.js-lightgrey.svg)](https://expressjs.com/)
-[![Database](https://img.shields.io/badge/Database-MongoDB%20Atlas-green.svg)](https://www.mongodb.com/atlas)
+
 
 A professional, production-ready full-stack property listing and booking platform built with Node.js, Express, and MongoDB.
 
-🔗 **Live Website:** [https://dreamland-31ik.onrender.com](https://dreamland-31ik.onrender.com)
+
 
 ---
 
