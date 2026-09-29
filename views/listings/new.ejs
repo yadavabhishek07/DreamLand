@@ -1,0 +1,112 @@
+<%- layout('layouts/boilerplate') %>
+
+<div class="row my-4">
+  <div class="col-12 col-md-8 offset-md-2">
+    <h3 class="mb-4">Create a New Listing</h3>
+    <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+      
+      <!-- Title -->
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          name="listing[title]" 
+          id="title"
+          placeholder="e.g. Cozy Beachfront Villa" 
+          type="text"
+          class="form-control" 
+          required
+        />
+        <div class="invalid-feedback">Please provide a listing title.</div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          name="listing[description]"
+          id="description"
+          placeholder="Describe your property, amenities, and vibe..." 
+          class="form-control"
+          rows="4"
+          required
+        ></textarea>  
+        <div class="invalid-feedback">Please enter a short description.</div>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="mb-3">
+        <label for="image" class="form-label">Upload Image</label>
+        <input 
+          name="listing[image]"
+          id="image"
+          type="file" 
+          class="form-control" 
+          required 
+        />
+        <div class="invalid-feedback">Please upload a photo of the property.</div>
+      </div>
+
+      <!-- Price & Country -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="price" class="form-label">Price per night (&#8377;)</label>
+          <input 
+            name="listing[price]" 
+            id="price"
+            type="number"
+            min="0"
+            placeholder="e.g. 2500"
+            class="form-control"
+            required 
+          />
+          <div class="invalid-feedback">Please enter a valid price.</div>
+        </div>
+       
+        <div class="col-md-8 mb-3">
+          <label for="country" class="form-label">Country</label>
+          <input 
+            name="listing[country]" 
+            id="country"
+            placeholder="e.g. India" 
+            type="text" 
+            class="form-control"
+            required 
+          />
+          <div class="invalid-feedback">Please provide the country name.</div>
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div class="mb-3">
+        <label for="location" class="form-label">Location / City</label>
+        <input 
+          name="listing[location]" 
+          id="location"
+          placeholder="e.g. Goa" 
+          type="text"  
+          class="form-control"
+          required
+        />
+        <div class="invalid-feedback">Please enter a valid location.</div>
+      </div>
+
+      <!-- Category -->
+      <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <select name="listing[category]" id="category" class="form-select" required>
+          <option value="Room" selected>Room</option>
+          <option value="Trending">Trending</option>
+          <option value="Iconic Cities">Iconic Cities</option>
+          <option value="Mountain">Mountain</option>
+          <option value="Castels">Castels</option>
+          <option value="Pools">Pools</option>
+          <option value="Camping">Camping</option>
+          <option value="Farms">Farms</option>
+        </select>
+        <div class="invalid-feedback">Please select a category.</div>
+      </div>
+
+      <button class="btn btn-danger px-4 py-2 mt-2" type="submit">Create Listing</button>
+    </form>
+  </div>
+</div> 

@@ -1,0 +1,244 @@
+<%- layout('layouts/boilerplate') %>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <!-- Brand logo -->
+        <div class="auth-brand">
+            <i class="fa-solid fa-compass"></i>
+            <span>Dream Land</span>
+        </div>
+        
+        <h1 class="auth-title" id="auth-title">Log in or sign up</h1>
+        <p class="auth-subtitle" id="auth-subtitle">Please enter your email to continue</p>
+
+        <!-- Continue with Google -->
+        <a href="/auth/google" class="auth-btn-google mb-3" id="google-auth-btn" style="text-decoration: none;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo" style="width: 20px; height: 20px;">
+            Continue with Google
+        </a>
+
+        <div class="auth-divider">or</div>
+
+        <!-- Main Form -->
+        <form id="auth-form" action="/login" method="post" class="needs-validation" novalidate>
+            <!-- Step 1: Email (Always visible at start) -->
+            <div id="email-step">
+                <div class="form-floating mb-3">
+                    <input
+                        name="email"
+                        id="email"   
+                        type="email"
+                        class="form-control" 
+                        placeholder="name@example.com"
+                        required
+                    />
+                    <label for="email">Email</label>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+                <button type="button" class="auth-btn-primary" id="email-continue-btn">Continue</button>
+            </div>
+
+            <!-- Dynamic Steps (Hidden by default) -->
+            <div id="dynamic-step" style="display: none;">
+                <!-- Showing selected email back to user -->
+                <div class="d-flex justify-content-between align-items-center mb-3 p-2 bg-light rounded" style="font-size: 0.9rem;">
+                    <span id="display-email" class="text-muted text-truncate me-2"></span>
+                    <a href="#" id="change-email-btn" style="color: #fe424d; font-weight: 600; text-decoration: none;">Change</a>
+                </div>
+
+                <!-- Username Input (Only for Signup mode) -->
+                <div class="form-floating mb-3" id="username-container" style="display: none;">
+                    <input
+                        name="username"
+                        id="username"   
+                        type="text"
+                        class="form-control" 
+                        placeholder="Username"
+                    />
+                    <label for="username">Username</label>
+                    <div class="invalid-feedback">Please choose a username.</div>
+                </div>
+
+                <!-- Password Input -->
+                <div class="form-floating mb-3">
+                    <input
+                        name="password"
+                        id="password"   
+                        type="password" 
+                        class="form-control" 
+                        placeholder="Password"
+                        required
+                    />
+                    <label for="password">Password</label>
+                    <button type="button" class="password-toggle-btn" id="password-toggle">
+                        <i class="fa-solid fa-eye" id="password-toggle-icon"></i>
+                    </button>
+                    <div class="invalid-feedback">Please enter your password.</div>
+                </div>
+
+                <!-- Password Strength Visual Meter (Only for Signup mode) -->
+                <div class="mb-4" id="strength-container" style="display: none; margin-top: -0.5rem;">
+                    <div class="progress" style="height: 5px;">
+                        <div id="password-strength-bar" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+                    </div>
+                    <div id="password-strength-text" class="form-text text-muted mt-1" style="font-size: 0.75rem;">Password must be at least 6 characters.</div>
+                </div>
+
+                <!-- Action Submit Button -->
+                <button class="auth-btn-primary" type="submit" id="submit-auth-btn">Log In</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const emailInput = document.getElementById("email");
+        const emailStep = document.getElementById("email-step");
+        const emailContinueBtn = document.getElementById("email-continue-btn");
+        
+        const dynamicStep = document.getElementById("dynamic-step");
+        const displayEmail = document.getElementById("display-email");
+        const changeEmailBtn = document.getElementById("change-email-btn");
+        
+        const usernameContainer = document.getElementById("username-container");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const submitAuthBtn = document.getElementById("submit-auth-btn");
+        const authForm = document.getElementById("auth-form");
+        
+        const strengthContainer = document.getElementById("strength-container");
+        const strengthBar = document.getElementById("password-strength-bar");
+        const strengthText = document.getElementById("password-strength-text");
+
+        const authTitle = document.getElementById("auth-title");
+        const authSubtitle = document.getElementById("auth-subtitle");
+
+        // Handle Email 'Continue'
+        emailContinueBtn.addEventListener("click", async () => {
+            const emailVal = emailInput.value.trim();
+            
+            // Basic email validation
+            if (!emailInput.checkValidity() || emailVal === "") {
+                emailInput.classList.add("is-invalid");
+                emailInput.focus();
+                return;
+            }
+            emailInput.classList.remove("is-invalid");
+
+            emailContinueBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
+            emailContinueBtn.disabled = true;
+
+            try {
+                // Check if email exists
+                const response = await fetch(`/api/check-email?email=${encodeURIComponent(emailVal)}`);
+                const data = await response.json();
+                
+                emailContinueBtn.innerHTML = 'Continue';
+                emailContinueBtn.disabled = false;
+
+                displayEmail.innerText = emailVal;
+                emailStep.style.display = "none";
+                dynamicStep.style.display = "block";
+
+                if (data.exists) {
+                    // LOGIN MODE
+                    authTitle.innerText = "Welcome back";
+                    authSubtitle.innerText = "Enter your password to sign in";
+                    
+                    usernameContainer.style.display = "none";
+                    usernameInput.removeAttribute("required");
+                    
+                    strengthContainer.style.display = "none";
+                    
+                    submitAuthBtn.innerText = "Log In";
+                    authForm.setAttribute("action", "/login");
+                    
+                    passwordInput.focus();
+                } else {
+                    // SIGNUP MODE
+                    authTitle.innerText = "Create an account";
+                    authSubtitle.innerText = "It looks like you're new! Let's get registered.";
+                    
+                    usernameContainer.style.display = "block";
+                    usernameInput.setAttribute("required", "true");
+                    
+                    strengthContainer.style.display = "block";
+                    
+                    submitAuthBtn.innerText = "Sign Up";
+                    authForm.setAttribute("action", "/signup");
+                    
+                    usernameInput.focus();
+                }
+            } catch (err) {
+                console.error("Auth check email error:", err);
+                emailContinueBtn.innerHTML = 'Continue';
+                emailContinueBtn.disabled = false;
+                alert("Something went wrong. Please check your internet connection.");
+            }
+        });
+
+        // Handle Enter key on email field
+        emailInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                emailContinueBtn.click();
+            }
+        });
+
+        // Handle 'Change Email'
+        changeEmailBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            dynamicStep.style.display = "none";
+            emailStep.style.display = "block";
+            
+            authTitle.innerText = "Log in or sign up";
+            authSubtitle.innerText = "Please enter your email to continue";
+            
+            passwordInput.value = "";
+            usernameInput.value = "";
+            
+            emailInput.focus();
+        });
+
+        // Show/Hide Password Toggle Logic
+        const toggleButton = document.getElementById('password-toggle');
+        const toggleIcon = document.getElementById('password-toggle-icon');
+
+        toggleButton.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Toggle eye icon
+            toggleIcon.classList.toggle('fa-eye');
+            toggleIcon.classList.toggle('fa-eye-slash');
+        });
+
+        // Password Strength Indicator Logic
+        passwordInput.addEventListener('input', () => {
+            const val = passwordInput.value;
+            let score = 0;
+
+            if (val.length >= 6) score += 25;
+            if (val.length >= 10) score += 25;
+            if (/[A-Z]/.test(val)) score += 25;
+            if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) score += 25;
+
+            strengthBar.style.width = score + '%';
+            
+            if (score === 0) {
+                strengthBar.className = 'progress-bar bg-danger';
+                strengthText.innerText = 'Password must be at least 6 characters.';
+            } else if (score <= 50) {
+                strengthBar.className = 'progress-bar bg-warning';
+                strengthText.innerText = 'Weak password (try adding uppercase, numbers or symbols).';
+            } else if (score <= 75) {
+                strengthBar.className = 'progress-bar bg-info';
+                strengthText.innerText = 'Good password.';
+            } else {
+                strengthBar.className = 'progress-bar bg-success';
+                strengthText.innerText = 'Strong password.';
+            }
+        });
+    });
+</script>

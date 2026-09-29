@@ -1,0 +1,23 @@
+<%- layout("layouts/boilerplate") %>
+
+<div class="row my-5">
+  <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+    <div class="alert alert-danger shadow-sm border-0 rounded-4 p-4 text-center" role="alert">
+      <i class="fa-solid fa-triangle-exclamation fa-3x text-danger mb-3"></i>
+      <h4 class="alert-heading fw-bold">Oops! Something went wrong</h4>
+      <p class="mb-3 text-secondary"><%= message %></p>
+      
+      <% if (process.env.NODE_ENV !== 'production' && typeof err !== 'undefined' && err.stack) { %>
+        <details class="text-start bg-white p-3 rounded border mb-3">
+          <summary class="text-muted small" style="cursor: pointer;">View Error Details (Development Only)</summary>
+          <pre class="mt-2 small text-danger" style="overflow-x: auto;"><%= err.stack %></pre>
+        </details>
+      <% } %>
+
+      <div class="d-flex justify-content-center gap-2">
+        <a href="/listings" class="btn btn-danger px-4">Back to Home</a>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary px-4">Go Back</a>
+      </div>
+    </div>
+  </div>
+</div>

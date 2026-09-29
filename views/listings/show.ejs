@@ -1,0 +1,303 @@
+<%- layout("layouts/boilerplate") %>
+
+<div class="row mt-3"> 
+  <div class="col-6 offset-3">
+    <!-- 1. Listing Title -->
+    <h3 class="mb-3"> <%= listing.title %> </h3>
+
+    <!-- 2. Listing Card -->
+    <div class="card show-card listing-card">
+      <img 
+        src="<%= listing.image && listing.image.url ? listing.image.url : 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60' %>" 
+        class="card-img-top show-img"
+        alt="listing_image"
+        style="height: 400px; object-fit: cover; border-radius: 1rem;"
+      />
+      <div class="card-body mt-3">
+        <p class="card-text text-muted">Owned by <i><%= listing.owner?.username || 'Unknown' %></i></p>
+        <p class="card-text font-size-large"><%= listing.description %></p>
+        <p class="card-text"><strong>&#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %></strong> / night</p>
+        <p class="card-text"><i class="fa-solid fa-location-dot text-danger"></i> <%= listing.location %>, <%= listing.country %></p>
+      </div>
+    </div>
+    
+    <!-- 3. Edit/Delete Buttons (Only for Owner) -->
+    <% if (currUser && listing.owner && currUser._id.equals(listing.owner._id || listing.owner)) { %> 
+      <div class="btns mb-4 mt-3 d-flex gap-3">
+        <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark edit-btn px-4">Edit</a>
+        <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="m-0">
+          <button class="btn btn-danger px-4">Delete</button>
+        </form>
+      </div>
+    <% } %>
+
+    <hr/>
+
+    <!-- 4. Review Submission Form -->
+    <% if(currUser) { %>
+      <div class="mb-4">
+        <h4>Leave a Review</h4>
+        <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation" >
+          <fieldset class="starability-slot">
+            <legend>First rating:</legend>
+            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+
+          <div class="mb-3 mt-3">
+            <label for="comment" class="form-label">Comments</label>
+            <textarea 
+              name="review[comment]" 
+              id="comment"
+              cols="30"
+              rows="5" 
+              class="form-control"
+              required
+            ></textarea>
+            <div class="invalid-feedback">Please submit feedback</div>
+          </div>
+          <button class="btn btn-outline-dark">Submit</button>
+        </form>
+      </div>
+      <hr/>
+    <% } %>
+
+    <!-- 5. All Reviews List -->
+    <% if(listing.reviews && listing.reviews.length > 0) { %>
+      <div class="mb-4">
+        <p><b>All Reviews</b></p> 
+        <div class="row">
+          <% for(let review of listing.reviews){ %>
+            <div class="card col-5 ms-3 mb-3 p-0">
+              <div class="card-body p-3">
+                <h5 class="card-title"><%= review.author?.username || 'Anonymous' %></h5>
+                <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+                <p class="card-text"><%= review.comment %></p>
+                <% if (currUser && review.author && currUser._id.equals(review.author._id || review.author)) { %>
+                  <form class="mb-2" method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                    <button class="btn btn-sm btn-dark">Delete</button>
+                  </form>
+                <% } %>
+              </div>  
+            </div>
+          <% } %>
+        </div>
+      </div>
+      <hr/>
+    <% } %>
+
+    <!-- 6. Leaflet Map -->
+    <div class="mb-5">
+      <h3>Where you'll be</h3>
+      <div class="map-box mt-3">
+  <div id="map" aria-label="Map showing the listing area"></div>
+</div>
+      <div class="mt-3">
+        <button id="locate-btn" class="btn btn-outline-dark">
+          <i class="fa-solid fa-location-crosshairs"></i> Show My Location & Distance
+        </button>
+        <p id="distance-info" class="mt-2 text-success" style="display: none; font-weight: bold;"></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const locationName = "<%= listing.location %>, <%= listing.country %>";
+    
+    // Initialize Leaflet map centered at default coordinates
+    const map = L.map('map').setView([20, 0], 2);
+    
+    // Force recalculating size after render to align tiles and resolve scroll shifts
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 250);
+    
+    // Load OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const locationCoords = {
+      "malibu": [34.0259, -118.7798],
+      "new york city": [40.7128, -74.0060],
+      "aspen": [39.1911, -106.8175],
+      "florence": [43.7696, 11.2558],
+      "portland": [45.5152, -122.6784],
+      "cancun": [21.1619, -86.8515],
+      "lake tahoe": [39.0968, -120.0324],
+      "los angeles": [34.0522, -118.2437],
+      "verbier": [46.0961, 7.2286],
+      "serengeti national park": [-2.1540, 34.6857],
+      "amsterdam": [52.3676, 4.9041],
+      "fiji": [-17.7134, 178.0650],
+      "cotswolds": [51.8330, -1.8433],
+      "boston": [42.3601, -71.0589],
+      "bali": [-8.4095, 115.1889],
+      "banff": [51.1784, -115.5708],
+      "miami": [25.7617, -80.1918],
+      "reykjavik": [64.1466, -21.9426],
+      "paris": [48.8566, 2.3522],
+      "tokyo": [35.6762, 139.6503],
+      "kyoto": [35.0116, 135.7681],
+      "santorini": [36.3932, 25.4615],
+      "prague": [50.0755, 14.4378],
+      "rome": [41.9028, 12.4964],
+      "venice": [45.4408, 12.3155],
+      "sydney": [-33.8688, 151.2093],
+      "queenstown": [-45.0312, 168.6626],
+      "cape town": [-33.9249, 18.4241],
+      "phuket": [7.8804, 98.3923],
+      "costa rica": [9.7489, -83.7534],
+      "lucknow": [26.8467, 80.9462]
+    };
+
+    const locationKey = "<%= listing.location %>".toLowerCase().trim();
+    let destinationCoords = locationCoords[locationKey];
+    let userMarker = null;
+    let routingLine = null;
+    let locationCircle = null;
+
+    // Helper: Draw Airbnb-style neighborhood circle
+    function drawLocation(coords, isFallback = false) {
+      map.setView(coords, isFallback ? 8 : 13);
+      
+      if (locationCircle) map.removeLayer(locationCircle);
+      
+      locationCircle = L.circle(coords, {
+        color: '#fe424d',
+        fillColor: '#fe424d',
+        fillOpacity: 0.15,
+        radius: isFallback ? 5000 : 800
+      }).addTo(map);
+
+      locationCircle.bindPopup(`<b>Exact location provided after booking</b><br/>General area around <%= listing.location %>, <%= listing.country %>.`).openPopup();
+    }
+
+    // Attempt local dictionary lookup first, then fallback to online geocoding API
+    if (destinationCoords) {
+      drawLocation(destinationCoords);
+    } else {
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationName)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            destinationCoords = [lat, lon];
+            drawLocation(destinationCoords);
+          } else {
+            return fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent("<%= listing.country %>")}`);
+          }
+        })
+        .then(response => response ? response.json() : null)
+        .then(data => {
+          if (data && data.length > 0 && !destinationCoords) {
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            destinationCoords = [lat, lon];
+            drawLocation(destinationCoords, true);
+          }
+        })
+        .catch(err => {
+          console.error("Nominatim geocoder error:", err);
+        });
+    }
+
+    // Haversine formula to calculate distance between two coordinates in kilometers
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Earth radius in km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return (R * c).toFixed(1);
+    }
+
+    // Geolocation Detection - Locate Me Button Click event
+    const locateBtn = document.getElementById("locate-btn");
+    const distanceInfo = document.getElementById("distance-info");
+
+    if (locateBtn) {
+      locateBtn.addEventListener("click", () => {
+        if (!navigator.geolocation) {
+          alert("Geolocation is not supported by your browser.");
+          return;
+        }
+
+        locateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Locating...';
+        locateBtn.disabled = true;
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
+            const userCoords = [userLat, userLon];
+
+            locateBtn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Locate Me';
+            locateBtn.disabled = false;
+
+            // Remove existing user marker and line if they exist
+            if (userMarker) map.removeLayer(userMarker);
+            if (routingLine) map.removeLayer(routingLine);
+
+            // Add user location marker (custom blue marker icon)
+            userMarker = L.marker(userCoords, {
+              icon: L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+              })
+            }).addTo(map)
+              .bindPopup("<b>Your Location</b>")
+              .openPopup();
+
+            // Calculate distance if destination coordinates are resolved
+            if (destinationCoords) {
+              const distance = calculateDistance(userLat, userLon, destinationCoords[0], destinationCoords[1]);
+              distanceInfo.innerHTML = `You are approximately <strong>${distance} km</strong> away from this destination!`;
+              distanceInfo.style.display = "block";
+
+              // Draw path between user and destination
+              routingLine = L.polyline([userCoords, destinationCoords], { color: '#fe424d', dashArray: '5, 10' }).addTo(map);
+
+              // Fit map bounds to show both markers
+              const group = new L.featureGroup([userMarker, L.marker(destinationCoords)]);
+              map.fitBounds(group.getBounds().pad(0.15));
+            } else {
+              map.setView(userCoords, 14);
+            }
+          },
+          (error) => {
+            locateBtn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Locate Me';
+            locateBtn.disabled = false;
+            let msg = "Unable to retrieve your location.";
+            if (error.code === error.PERMISSION_DENIED) {
+              msg = "Location access denied by user. Please enable browser location permissions.";
+            }
+            alert(msg);
+          },
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      });
+    }
+  });
+</script>

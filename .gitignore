@@ -1,0 +1,8 @@
+.env
+node_modules/
+*.log
+*.zip
+*.exe
+.DS_Store
+.vercel/
+.vercel

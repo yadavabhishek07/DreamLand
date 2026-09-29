@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in - Google Accounts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f4f9;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .google-card {
+            background-color: #ffffff;
+            border-radius: 1.75rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            border: 1px solid #e0e2e6;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .google-logo {
+            width: 75px;
+            margin-bottom: 1.5rem;
+        }
+        .google-title {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #1f1f1f;
+            margin-bottom: 0.5rem;
+        }
+        .google-subtitle {
+            font-size: 0.95rem;
+            color: #444746;
+            margin-bottom: 2rem;
+        }
+        .account-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            border: 1px solid transparent;
+        }
+        .account-item:hover {
+            background-color: #f0f4f9;
+        }
+        .account-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fe424d;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+        }
+        .account-info {
+            flex: 1;
+            overflow: hidden;
+        }
+        .account-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1f1f1f;
+            margin: 0;
+        }
+        .account-email {
+            font-size: 0.8rem;
+            color: #444746;
+            margin: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .custom-form {
+            display: none;
+            text-align: left;
+            margin-top: 1rem;
+        }
+        .btn-google-next {
+            background-color: #0b57d0;
+            color: white;
+            border: none;
+            border-radius: 100px;
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        .btn-google-next:hover {
+            background-color: #0842a0;
+            color: white;
+        }
+        .google-footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #747775;
+        }
+        .google-footer a {
+            color: #747775;
+            text-decoration: none;
+        }
+        .google-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="google-card">
+    <!-- Google Logo SVG -->
+    <svg class="google-logo" viewBox="0 0 24 24" width="75" height="30" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+    </svg>
+
+    <h1 class="google-title" id="main-title">Choose an account</h1>
+    <p class="google-subtitle" id="main-subtitle">to continue to <strong>Dream Land</strong></p>
+
+    <!-- Pre-defined accounts list -->
+    <div id="accounts-list">
+        <!-- Account 1 -->
+        <div class="account-item" onclick="selectAccount('abhisheky0718@gmail.com', 'Abhishek Yadav')">
+            <div class="account-avatar" style="background-color: #0f9d58;">A</div>
+            <div class="account-info">
+                <p class="account-name">Abhishek Yadav</p>
+                <p class="account-email">abhisheky0718@gmail.com</p>
+            </div>
+        </div>
+
+        <!-- Account 2 -->
+        <div class="account-item" onclick="selectAccount('john.doe@gmail.com', 'John Doe')">
+            <div class="account-avatar" style="background-color: #4285f4;">J</div>
+            <div class="account-info">
+                <p class="account-name">John Doe</p>
+                <p class="account-email">john.doe@gmail.com</p>
+            </div>
+        </div>
+
+        <!-- Use another account -->
+        <div class="account-item" onclick="showCustomForm()" style="border-top: 1px solid #e0e2e6; margin-top: 1rem; border-radius: 0;">
+            <div class="account-avatar" style="background-color: #747775;"><i class="fa-solid fa-user-plus" style="font-size: 0.9rem;"></i></div>
+            <div class="account-info">
+                <p class="account-name" style="color: #0b57d0; font-weight: 500;">Use another account</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden form for simulation post -->
+    <form id="mock-callback-form" action="/auth/google/mock-callback" method="POST">
+        <input type="hidden" name="email" id="form-email">
+        <input type="hidden" name="name" id="form-name">
+    </form>
+
+    <!-- Form for custom account entry -->
+    <div id="custom-account-form" class="custom-form">
+        <div class="mb-3">
+            <label for="custom-name" class="form-label" style="font-size: 0.85rem; font-weight: 600;">Full Name</label>
+            <input type="text" id="custom-name" class="form-control" placeholder="e.g. Guest User" required>
+        </div>
+        <div class="mb-4">
+            <label for="custom-email" class="form-label" style="font-size: 0.85rem; font-weight: 600;">Google Email</label>
+            <input type="email" id="custom-email" class="form-control" placeholder="e.g. guest@gmail.com" required>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="#" onclick="showAccountsList()" style="color: #0b57d0; font-size: 0.85rem; text-decoration: none; font-weight: 600;">Back</a>
+            <button type="button" class="btn-google-next" onclick="submitCustomAccount()">Continue</button>
+        </div>
+    </div>
+
+    <div class="google-footer">
+        <div>English (United States)</div>
+        <div class="d-flex gap-2">
+            <a href="#">Help</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function selectAccount(email, name) {
+        document.getElementById("form-email").value = email;
+        document.getElementById("form-name").value = name;
+        document.getElementById("mock-callback-form").submit();
+    }
+
+    function showCustomForm() {
+        document.getElementById("accounts-list").style.display = "none";
+        document.getElementById("custom-account-form").style.display = "block";
+        document.getElementById("main-title").innerText = "Sign in";
+        document.getElementById("main-subtitle").innerText = "with your Google Account";
+        document.getElementById("custom-name").focus();
+    }
+
+    function showAccountsList() {
+        document.getElementById("custom-account-form").style.display = "none";
+        document.getElementById("accounts-list").style.display = "block";
+        document.getElementById("main-title").innerText = "Choose an account";
+        document.getElementById("main-subtitle").innerHTML = "to continue to <strong>Dream Land</strong>";
+    }
+
+    function submitCustomAccount() {
+        const name = document.getElementById("custom-name").value.trim();
+        const email = document.getElementById("custom-email").value.trim();
+
+        if (name === "" || email === "" || !email.includes("@")) {
+            alert("Please enter a valid name and email address.");
+            return;
+        }
+
+        selectAccount(email, name);
+    }
+</script>
+
+</body>
+</html>
